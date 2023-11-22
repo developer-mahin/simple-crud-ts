@@ -13,15 +13,24 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
         }
         const validatedData = userValidation.parse(userData);
         const result = await userService.createUser(validatedData)
-        if (result === null) {
-            throw createError(404, "Data not found")
-        }
 
-        res.status(201).json({
-            "success": true,
-            "message": "User created successfully!",
-            "data": result
-        })
+        if (result) {
+            res.status(201).json({
+                success: true,
+                message: "User created successfully!",
+                data: result
+            })
+        } else {
+            res.status(400).json({
+                success: false,
+                message: "User not found",
+                error: {
+                    code: 400,
+                    description: "User not found!"
+                }
+            })
+
+        }
 
     } catch (error) {
         let errorMessage = ""
