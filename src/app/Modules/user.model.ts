@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IOrder, IUser } from './user.interface';
+import { IOrder, IUser, IUserMethods, IUserModel } from './user.interface';
 import bcrypt, { genSaltSync } from "bcryptjs"
 
 
@@ -20,7 +20,7 @@ const orderSchema = new Schema<IOrder>({
     },
 });
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<IUser, IUserModel, IUserMethods>({
     userId: {
         type: Number,
         required: [true, 'User id is required'],
@@ -99,5 +99,11 @@ userSchema.pre("save", function (next) {
     next()
 })
 
-const User = model<IUser>('User', userSchema);
+// methods for custom static method 
+userSchema.methods.isUserExists = async function (id: number) {
+    const userIsExist = await User.findOne({ userId: id })
+    return userIsExist
+}
+
+const User = model<IUser, IUserModel>('User', userSchema);
 export default User;

@@ -1,3 +1,6 @@
+import { Model } from "mongoose";
+
+/* eslint-disable no-unused-vars */
 export type IOrder = {
     productName: string;
     price: number;
@@ -23,3 +26,10 @@ export type IUser = {
     };
     orders?: IOrder[];
 };
+
+
+export type IUserMethods = {
+    isUserExists: (id: number) => Promise<IUser | null>
+}
+
+export type IUserModel = Model<IUser, Record<string, never>, IUserMethods>

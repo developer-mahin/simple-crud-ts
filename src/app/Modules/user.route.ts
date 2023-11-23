@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post("/", userCollection.createUser)
 router.get("/", userCollection.getALlUser)
-router.get("/:userId", userCollection.getALlUser)
+router.get("/:userId", userCollection.getSingleUser)
 
 
 
