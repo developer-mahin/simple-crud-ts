@@ -10,12 +10,8 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-
-
-
 // routers
-app.use("/api/users", userRouter)
-
+app.use('/api/users', userRouter);
 
 app.get('/', async (req: Request, res: Response) => {
   res.json({
@@ -32,8 +28,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: any, req: Request, res: Response) => {
   res.status(err.status || 500).json({
-      success: false,
-      message: err.message,
+    success: false,
+    message: err.message,
   });
 });
 export default app;
