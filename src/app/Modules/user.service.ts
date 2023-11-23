@@ -33,11 +33,20 @@ const createOrder = async (id: number, order: IOrder) => {
     return result
 }
 
+const getOrderForSpecificUser = async (id: number) => {
+    const result = await User.aggregate([
+        { $match: { userId: id } },
+        { $project: { orders: 1 } }
+    ])
+    return result
+}
+
 export const userService = {
     createUser,
     getALlUser,
     getSingleUser,
     updateUser,
     deleteUser,
-    createOrder
+    createOrder,
+    getOrderForSpecificUser
 }

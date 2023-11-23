@@ -130,7 +130,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
         }
         res.status(200).json({
             success: true,
-            message: "Users fetched successfully!",
+            message: "Users update successfully!",
             data: result
         })
 
@@ -181,12 +181,37 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
             const result = await userService.createOrder(Number(userId), order)
             res.status(200).json({
                 success: true,
-                message: "User deleted successfully!",
+                message: "Order created successfully!",
                 data: result
             })
         }
 
 
+    } catch (error) {
+        let errorMessage = ""
+        if (error instanceof Error) {
+            errorMessage = error.message
+            next(errorMessage)
+        }
+    }
+}
+
+const getOrderForSpecificUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const { userId } = req.params
+        const isUserExist = await User.exists({ userId })
+        if (!isUserExist) {
+            throw createError(404, "user not found")
+        }
+        if (isUserExist) {
+            const result = await userService.getOrderForSpecificUser(Number(userId))
+            res.status(200).json({
+                success: true,
+                message: "User deleted successfully!",
+                data: result
+            })
+        }
     } catch (error) {
         let errorMessage = ""
         if (error instanceof Error) {
@@ -203,5 +228,6 @@ export const userCollection = {
     getSingleUser,
     updateUser,
     deleteUser,
-    createOrder
+    createOrder,
+    getOrderForSpecificUser
 }
