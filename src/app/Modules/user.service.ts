@@ -1,14 +1,8 @@
-import createError from "http-errors"
 import { IUser } from "./user.interface"
 import User from "./user.model"
 
 const createUser = async (userData: IUser) => {
-    // const result = await User.create(userData)
-    const user = new User(userData)
-    const result = await user.save()
-    if (await result.isUserExists(userData.userId)) {
-        throw createError(400, "user already exist please try another info")
-    }
+    const result = await User.create(userData)
     return result
 }
 
@@ -25,12 +19,12 @@ const getSingleUser = async (id: number) => {
 }
 
 const updateUser = async (id: number, updatedDoc: IUser) => {
-    const result = await User.findByIdAndUpdate({ userId: id }, updatedDoc)
+    const result = await User.findOneAndUpdate({ userId: id }, updatedDoc, { new: true })
     return result
 }
 
 const deleteUser = async (id: number) => {
-    const result = await User.findOneAndDelete({ userId: id })
+    const result = await User.findOneAndDelete({ userId: id }, { new: true })
     return result
 }
 
