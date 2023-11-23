@@ -8,6 +8,7 @@ router.get("/", userCollection.getALlUser)
 router.get("/:userId", userCollection.getSingleUser)
 router.put("/:userId", userCollection.updateUser)
 router.delete("/:userId", userCollection.deleteUser)
+router.put("/:userId/orders", userCollection.createOrder)
 
 
 

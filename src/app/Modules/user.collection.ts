@@ -168,10 +168,40 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 
+const createOrder = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const { userId } = req.params
+        const order = req.body;
+        const isUserExist = await User.exists({ userId })
+        if (!isUserExist) {
+            throw createError(404, "user not found")
+        }
+        if (isUserExist) {
+            const result = await userService.createOrder(Number(userId), order)
+            res.status(200).json({
+                success: true,
+                message: "User deleted successfully!",
+                data: result
+            })
+        }
+
+
+    } catch (error) {
+        let errorMessage = ""
+        if (error instanceof Error) {
+            errorMessage = error.message
+            next(errorMessage)
+        }
+    }
+}
+
+
 export const userCollection = {
     createUser,
     getALlUser,
     getSingleUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    createOrder
 }
