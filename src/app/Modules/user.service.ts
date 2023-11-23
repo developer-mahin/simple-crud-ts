@@ -24,9 +24,20 @@ const getSingleUser = async (id: number) => {
     return result
 }
 
+const updateUser = async (id: number, updatedDoc: IUser) => {
+    const result = await User.findByIdAndUpdate({ userId: id }, updatedDoc)
+    return result
+}
+
+const deleteUser = async (id: number) => {
+    const result = await User.findOneAndDelete({ userId: id })
+    return result
+}
 
 export const userService = {
     createUser,
     getALlUser,
-    getSingleUser
+    getSingleUser,
+    updateUser,
+    deleteUser
 }

@@ -65,7 +65,6 @@ const getSingleUser = async (req: Request, res: Response, next: NextFunction) =>
     try {
 
         const { userId } = req.params
-
         const user = new User()
         if (!user.isUserExists(Number(userId))) {
             throw createError(404, "user not found with this user id")
@@ -87,9 +86,37 @@ const getSingleUser = async (req: Request, res: Response, next: NextFunction) =>
     }
 }
 
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const { userId } = req.params
+        const updatedDoc = req.body;
+
+        const user = new User()
+        if (!user.isUserExists(Number(userId))) {
+            throw createError(404, "user not found with this user id")
+        }
+
+        const result = await userService.updateUser(Number(userId), updatedDoc)
+        res.status(200).json({
+            success: true,
+            message: "Users fetched successfully!",
+            data: result
+        })
+
+    } catch (error) {
+        let errorMessage = ""
+        if (error instanceof Error) {
+            errorMessage = error.message
+            next(errorMessage)
+        }
+    }
+}
+
 
 export const userCollection = {
     createUser,
     getALlUser,
-    getSingleUser
+    getSingleUser,
+    updateUser
 }
