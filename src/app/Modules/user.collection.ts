@@ -14,23 +14,40 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
         const validatedData = userValidation.parse(userData);
         const result = await userService.createUser(validatedData)
 
-        if (result) {
-            res.status(201).json({
-                success: true,
-                message: "User created successfully!",
-                data: result
-            })
-        } else {
-            res.status(400).json({
+        if (!result) {
+            res.status(404).json({
                 success: false,
                 message: "User not found",
                 error: {
-                    code: 400,
+                    code: 404,
                     description: "User not found!"
                 }
             })
-
         }
+        res.status(201).json({
+            success: true,
+            message: "User created successfully!",
+            data: result
+        })
+
+    } catch (error) {
+        let errorMessage = ""
+        if (error instanceof Error) {
+            errorMessage = error.message
+            next(errorMessage)
+        }
+    }
+}
+
+const getALlUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = await userService.getALlUser()
+
+        res.status(200).json({
+            success: true,
+            message: "Users fetched successfully!",
+            data: result
+        })
 
     } catch (error) {
         let errorMessage = ""
@@ -42,6 +59,10 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 
+
+
+
 export const userCollection = {
-    createUser
+    createUser,
+    getALlUser
 }

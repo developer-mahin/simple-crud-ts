@@ -1,5 +1,9 @@
 import { Schema, model } from 'mongoose';
 import { IOrder, IUser } from './user.interface';
+import bcrypt, { genSaltSync } from "bcryptjs"
+
+
+
 
 const orderSchema = new Schema<IOrder>({
     productName: {
@@ -79,6 +83,21 @@ const userSchema = new Schema<IUser>({
         type: [orderSchema]
     }
 });
+
+
+
+// pre middleware for hashing password
+userSchema.pre("save", function (next) {
+    const hashedPassword = bcrypt.hashSync(this.password, genSaltSync(10))
+    this.password = hashedPassword
+    next()
+})
+
+// pre middleware for hiding password from database
+userSchema.pre("save", function (next) {
+    this.password = ""
+    next()
+})
 
 const User = model<IUser>('User', userSchema);
 export default User;

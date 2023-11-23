@@ -6,7 +6,23 @@ const createUser = async (userData: IUser) => {
     return result
 }
 
+const getALlUser = async () => {
+    const result = await User.aggregate([
+        { $project: { username: 1, fullName: 1, age: 1, email: 1, address: 1 } }
+    ])
+    return result
+}
+
+const getSingleUser = async () => {
+    const result = await User.aggregate([
+        { $project: { username: 1, fullName: 1, age: 1, email: 1, address: 1 } }
+    ])
+    return result
+}
+
 
 export const userService = {
-    createUser
+    createUser,
+    getALlUser,
+    getSingleUser
 }
