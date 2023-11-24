@@ -6,7 +6,7 @@ import config from './config';
 
 async function server() {
   try {
-    await mongoose.connect(config.database as string).then(() => {
+    await mongoose.connect(config.database_url as string).then(() => {
       console.log('database connected successfully');
     });
 

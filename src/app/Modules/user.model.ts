@@ -89,7 +89,8 @@ userSchema.pre('save', function (next) {
 });
 
 // pre middleware for hiding password from database
-userSchema.pre('save', function (next) {
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
   this.password = '';
   next();
 });
