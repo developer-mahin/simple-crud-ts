@@ -29,7 +29,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use((err: any, req: Request, res: Response) => {
   res.status(err.status || 500).json({
     success: false,
-    message: err.message,
+    message: "User not found",
+    error: {
+      code: 404,
+      description: "User not found!"
+    }
   });
 });
 export default app;

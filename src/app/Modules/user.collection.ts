@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import createError from 'http-errors';
 import userValidation from './user.validation';
 import { userService } from './user.service';
 import User from './user.model';
 
-const createUser = async (req: Request, res: Response, next: NextFunction) => {
+const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
     if (!userData) {
@@ -13,21 +13,14 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
     const isUserExist = await User.exists({ userId: userData.userId });
     if (isUserExist) {
-      throw createError(404, 'User already have with this user id');
+      throw createError(500, 'User already have with this user id');
     }
 
     const validatedData = userValidation.parse(userData);
     const result = await userService.createUser(validatedData);
 
     if (!result) {
-      res.status(404).json({
-        success: false,
-        message: 'User not found',
-        error: {
-          code: 404,
-          description: 'User not found!',
-        },
-      });
+      throw createError(404, 'Not found');
     }
     res.status(201).json({
       success: true,
@@ -35,15 +28,18 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       data: result,
     });
   } catch (error) {
-    let errorMessage = '';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      next(errorMessage);
-    }
+    res.status(500).json({
+      success: false,
+      message: "User did created",
+      error: {
+        code: 500,
+        description: "User did created"
+      }
+    })
   }
 };
 
-const getALlUser = async (req: Request, res: Response, next: NextFunction) => {
+const getALlUser = async (req: Request, res: Response) => {
   try {
     const result = await userService.getALlUser();
 
@@ -53,18 +49,20 @@ const getALlUser = async (req: Request, res: Response, next: NextFunction) => {
       data: result,
     });
   } catch (error) {
-    let errorMessage = '';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      next(errorMessage);
-    }
+    res.status(404).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!"
+      }
+    })
   }
 };
 
 const getSingleUser = async (
   req: Request,
   res: Response,
-  next: NextFunction,
 ) => {
   try {
     const { userId } = req.params;
@@ -78,31 +76,24 @@ const getSingleUser = async (
     }
 
     const result = await userService.getSingleUser(Number(userId));
-    if (result === null) {
-      res.status(404).json({
-        success: false,
-        message: 'User not found',
-        error: {
-          code: 404,
-          description: 'User not found!',
-        },
-      });
-    }
     res.status(200).json({
       success: true,
       message: 'Users fetched successfully!',
       data: result,
     });
   } catch (error) {
-    let errorMessage = '';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      next(errorMessage);
-    }
+    res.status(404).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!"
+      }
+    })
   }
 };
 
-const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const updatedDoc = req.body;
@@ -113,30 +104,24 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const result = await userService.updateUser(Number(userId), updatedDoc);
-    if (!result) {
-      res.status(404).json({
-        success: false,
-        message: 'User not found',
-        error: {
-          code: 404,
-          description: 'User not found!',
-        },
-      });
-    }
+
     res.status(200).json({
       success: true,
       message: 'Users update successfully!',
       data: result,
     });
   } catch (error) {
-    let errorMessage = '';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      next(errorMessage);
-    }
+    res.status(500).json({
+      success: false,
+      message: "User did not update",
+      error: {
+        code: 500,
+        description: "User did not update"
+      }
+    })
   }
 };
-const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const isUserExist = await User.exists({ userId });
@@ -151,15 +136,18 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
       data: null,
     });
   } catch (error) {
-    let errorMessage = '';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      next(errorMessage);
-    }
+    res.status(500).json({
+      success: false,
+      message: "User did not delete",
+      error: {
+        code: 500,
+        description: "User did not delete"
+      }
+    })
   }
 };
 
-const createOrder = async (req: Request, res: Response, next: NextFunction) => {
+const createOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const order = req.body;
@@ -176,18 +164,20 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
   } catch (error) {
-    let errorMessage = '';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      next(errorMessage);
-    }
+    res.status(500).json({
+      success: false,
+      message: "Order not created",
+      error: {
+        code: 404,
+        description: "Order not created"
+      }
+    })
   }
 };
 
 const getOrderForSpecificUser = async (
   req: Request,
-  res: Response,
-  next: NextFunction,
+  res: Response
 ) => {
   try {
     const { userId } = req.params;
@@ -204,18 +194,20 @@ const getOrderForSpecificUser = async (
       });
     }
   } catch (error) {
-    let errorMessage = '';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      next(errorMessage);
-    }
+    res.status(500).json({
+      success: false,
+      message: "order not found",
+      error: {
+        code: 404,
+        description: "order not found!"
+      }
+    })
   }
 };
 
 const countTotalPrice = async (
   req: Request,
-  res: Response,
-  next: NextFunction,
+  res: Response
 ) => {
   try {
     const { userId } = req.params;
@@ -233,11 +225,14 @@ const countTotalPrice = async (
       });
     }
   } catch (error) {
-    let errorMessage = '';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-      next(errorMessage);
-    }
+    res.status(500).json({
+      success: false,
+      message: "Did not calculate total price",
+      error: {
+        code: 404,
+        description: "Did not calculate total price"
+      }
+    })
   }
 };
 
