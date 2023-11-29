@@ -50,24 +50,7 @@ For order management you can create order not create you can push an order in ex
     "street": "987 Oak St",
     "city": "Cityville",
     "country": "USA"
-  },
-  "orders": [
-    {
-      "productName": "Product 19",
-      "price": 8.99,
-      "quantity": 1
-    },
-    {
-      "productName": "Product 20",
-      "price": 19.99,
-      "quantity": 3
-    },
-    {
-      "productName": "Product 21",
-      "price": 190.99,
-      "quantity": 31
-    }
-  ]
+  }
 }
 ```
 
