@@ -59,7 +59,6 @@ const getALlUser = async (req: Request, res: Response) => {
     })
   }
 };
-
 const getSingleUser = async (
   req: Request,
   res: Response,
